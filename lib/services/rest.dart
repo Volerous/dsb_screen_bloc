@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:dsb_screen/models/departure.dart';
+import 'package:dsb_screen_bloc/models/models.dart';
+import 'package:dsb_screen_bloc/models/departure_board.dart';
 import 'package:http/http.dart' as http;
 
 class DSBRestApi {
@@ -15,9 +16,8 @@ class DSBRestApi {
       throw Exception(res.body);
     }
     var ret = DepartureBoard.fromJson(jsonDecode(res.body)["DepartureBoard"]);
-    ret.departures =
-        ret.departures.where((i) => i.minutesToDeparture > 0).toList();
-    return ret;
+    return ret.copyWith(
+        ret.departures!.where((i) => i.minutesToDeparture > 0).toList(), "");
   }
 
   const DSBRestApi();

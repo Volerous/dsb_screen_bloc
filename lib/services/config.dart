@@ -43,7 +43,7 @@ class ConfigLoader {
     prefs.setString("config", jsonEncode(config));
   }
 
-  Future<void> removeStation(String station) async {
+  Future<void> deleteStation(String station) async {
     final prefs = await SharedPreferences.getInstance();
     final config = await getOrCreateConfig();
     config.remove(station);

@@ -6,35 +6,25 @@ part of 'departure.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DepartureBoard _$DepartureBoardFromJson(Map<String, dynamic> json) =>
-    DepartureBoard()
-      ..departures = (json['Departure'] as List<dynamic>)
-          .map((e) => Departure.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..error = json['error'] as String?;
-
-Map<String, dynamic> _$DepartureBoardToJson(DepartureBoard instance) =>
-    <String, dynamic>{
-      'Departure': instance.departures,
-      'error': instance.error,
-    };
-
-Departure _$DepartureFromJson(Map<String, dynamic> json) => Departure()
-  ..journeyDetailRef = JourneyDetailRef.fromJson(
-      json['JourneyDetailRef'] as Map<String, dynamic>)
-  ..name = json['name'] as String
-  ..type = _$enumDecode(_$DepartureTypeEnumMap, json['type'])
-  ..stop = json['stop'] as String
-  ..time = json['time'] as String
-  ..date = json['date'] as String
-  ..id = json['id'] as String
-  ..line = json['line'] as String?
-  ..track = json['track'] as String?
-  ..rtTrack = json['rtTrack'] as String?
-  ..direction = json['direction'] as String
-  ..messages = json['messages'] as String?
-  ..finalStop = json['finalStop'] as String?
-  ..state = json['state'] as String?;
+Departure _$DepartureFromJson(Map<String, dynamic> json) => Departure(
+      journeyDetailRef: json['JourneyDetailRef'] == null
+          ? null
+          : JourneyDetailRef.fromJson(
+              json['JourneyDetailRef'] as Map<String, dynamic>),
+      type: _$enumDecodeNullable(_$DepartureTypeEnumMap, json['type']),
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      stop: json['stop'] as String?,
+      time: json['time'] as String?,
+      date: json['date'] as String?,
+      direction: json['direction'] as String?,
+      line: json['line'] as String?,
+      track: json['track'] as String?,
+      rtTrack: json['rtTrack'] as String?,
+      messages: json['messages'] as String?,
+      finalStop: json['finalStop'] as String?,
+      state: json['state'] as String?,
+    );
 
 Map<String, dynamic> _$DepartureToJson(Departure instance) => <String, dynamic>{
       'JourneyDetailRef': instance.journeyDetailRef,
@@ -79,6 +69,17 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
+}
+
 const _$DepartureTypeEnumMap = {
   DepartureType.ic: 'IC',
   DepartureType.lyn: 'LYN',
@@ -93,11 +94,3 @@ const _$DepartureTypeEnumMap = {
   DepartureType.m: 'M',
   DepartureType.let: 'LET',
 };
-
-JourneyDetailRef _$JourneyDetailRefFromJson(Map<String, dynamic> json) =>
-    JourneyDetailRef()..ref = json['ref'] as String;
-
-Map<String, dynamic> _$JourneyDetailRefToJson(JourneyDetailRef instance) =>
-    <String, dynamic>{
-      'ref': instance.ref,
-    };

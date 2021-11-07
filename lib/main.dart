@@ -1,37 +1,40 @@
-import 'package:dsb_screen/models/departure.dart';
-import 'package:dsb_screen/services/config.dart';
-import 'package:dsb_screen/view_models/config_view_model.dart';
-import 'package:dsb_screen/view_models/rest_view_model.dart';
-import 'package:dsb_screen/widgets/drawer.dart';
-import 'package:dsb_screen/widgets/listview.dart';
-import 'package:dsb_screen/pages/settings.dart';
+import 'package:dsb_screen_bloc/departure_board_bloc_observer.dart';
+import 'package:dsb_screen_bloc/services/config.dart';
+import 'package:dsb_screen_bloc/services/stations.dart';
+import 'package:dsb_screen_bloc/states/config/config_cubit.dart';
+import 'package:dsb_screen_bloc/states/station_list/station_list_cubit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:dsb_screen/services/typedefs.dart';
+import 'package:dsb_screen_bloc/pages/pages.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final loader = ConfigLoader();
-  final conf = await loader.getOrCreateConfig();
-  runApp(MyApp(config: conf));
+  Bloc.observer = DepartureBoardBlocObserver();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? HydratedStorage.webStorageDirectory
+        : await getTemporaryDirectory(),
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key, required this.config}) : super(key: key);
-  final StationConfigs config;
+  MyApp({Key? key}) : super(key: key);
+  final ConfigLoader _configLoader = ConfigLoader();
+  final StationsListService _stationsListService = StationsListService();
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ConfigViewModel(config: config)),
-        ChangeNotifierProvider(
-          create: (context) => DsbApiViewModel(
-            configViewModel:
-                Provider.of<ConfigViewModel>(context, listen: false),
-          ),
+        BlocProvider(
+          create: (_) => ConfigCubit(_configLoader),
         ),
+        BlocProvider(create: (_) => StationListCubit(_stationsListService))
       ],
-      builder: (c, _) => MaterialApp(
+      child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -41,62 +44,5 @@ class MyApp extends StatelessWidget {
         home: const MyHomePage(),
       ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  void goToSettingsPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const SettingsPage(),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final configModel = Provider.of<ConfigViewModel>(context);
-    final restModel = Provider.of<DsbApiViewModel>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(configModel.currentStation),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: goToSettingsPage,
-          ),
-        ],
-      ),
-      drawer: const StationListDrawer(),
-      body: StreamProvider(
-        updateShouldNotify: (p, n) => true,
-        create: (_) => restModel.board,
-        initialData: DepartureBoard(),
-        builder: (c, child) {
-          final board = c.watch<DepartureBoard>();
-          if (!board.isEmpty) {
-            return DSBScreenListView(board: board);
-          }
-          return child!;
-        },
-        child: ElevatedButton(
-          child: const Center(
-            child: Text("Reload"),
-          ),
-          onPressed: () {
-            restModel.updateArgs();
-          },
-        ),
-      ),
-    );
-    ;
   }
 }

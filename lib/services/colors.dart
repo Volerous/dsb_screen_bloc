@@ -1,4 +1,4 @@
-import 'package:dsb_screen/models/departure.dart';
+import 'package:dsb_screen_bloc/models/departure.dart';
 import 'package:flutter/material.dart';
 
 class DSBColors {

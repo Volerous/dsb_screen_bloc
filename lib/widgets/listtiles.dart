@@ -1,6 +1,6 @@
-import 'package:dsb_screen/services/colors.dart';
+import 'package:dsb_screen_bloc/services/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:dsb_screen/models/departure.dart';
+import 'package:dsb_screen_bloc/models/departure.dart';
 
 class ListElement extends StatefulWidget {
   const ListElement({Key? key, required this.departure}) : super(key: key);
@@ -14,7 +14,7 @@ class _ListElementState extends State<ListElement> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        widget.departure.direction,
+        widget.departure.direction!,
         style: const TextStyle(
           fontWeight: FontWeight.w700,
         ),
@@ -35,7 +35,7 @@ class _ListElementState extends State<ListElement> {
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             color: DSBColors.getFromInfo(
-                widget.departure.type, widget.departure.line),
+                widget.departure.type!, widget.departure.line),
           ),
         ),
       ),

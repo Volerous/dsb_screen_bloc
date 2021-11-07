@@ -1,7 +1,9 @@
-import 'package:dsb_screen/pages/settings.dart';
-import 'package:dsb_screen/view_models/config_view_model.dart';
-import 'package:dsb_screen/view_models/rest_view_model.dart';
+import 'package:dsb_screen_bloc/pages/settings_page.dart';
+import 'package:dsb_screen_bloc/states/config/config_cubit.dart';
+import 'package:dsb_screen_bloc/states/config/config_state.dart';
+import 'package:dsb_screen_bloc/states/departure_board/departure_board_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class StationListDrawer extends StatefulWidget {
@@ -15,7 +17,6 @@ class _StationListDrawerState extends State<StationListDrawer> {
   @override
   void initState() {
     super.initState();
-    // Provider.of<ConfigViewModel>(context).fetchConfig();
   }
 
   void addNewStation() {
@@ -44,9 +45,8 @@ class _StationListDrawerState extends State<StationListDrawer> {
               TextButton(
                 child: const Text("YES"),
                 onPressed: () {
-                  final vm =
-                      Provider.of<ConfigViewModel>(context, listen: false);
-                  vm.changeStation(newStation);
+                  final vm = c.read<ConfigCubit>();
+                  vm.updateCurrentStation(newStation);
                   vm.deleteStation(station);
                   Navigator.pop(context);
                   Navigator.pop(context);
@@ -65,46 +65,52 @@ class _StationListDrawerState extends State<StationListDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ConfigViewModel>(context);
-    return Drawer(
-      child: ListView.builder(
-        itemCount: viewModel.config.keys.length + 2,
-        itemBuilder: (c, i) {
-          if (i == viewModel.config.length + 1) {
-            return ListTile(
-              title: TextButton(
-                child: const Text("RESET"),
-                onPressed: viewModel.resetConfig,
-              ),
-            );
-          } else if (i == viewModel.config.length) {
-            return TextButton(
-              onPressed: addNewStation,
-              child: const Text("Add Station"),
-            );
-          } else {
-            return ListTile(
-              title: Text(viewModel.keys[i]),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  showDeleteDialog(
-                      viewModel.keys[i],
-                      viewModel.keys.firstWhere((e) => e != viewModel.keys[i]),
-                      viewModel.config[viewModel.keys
-                          .firstWhere((e) => e != viewModel.keys[i])]);
-                },
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                viewModel.changeStation(viewModel.keys[i]);
-                Provider.of<DsbApiViewModel>(context, listen: false)
-                    .updateArgs();
-              },
-            );
-          }
-        },
-      ),
+    return BlocBuilder<ConfigCubit, ConfigState>(
+      builder: (ctx, state) {
+        final configState = state;
+        final configCubit = ctx.watch<ConfigCubit>();
+        return Drawer(
+          child: ListView.builder(
+            itemCount: configState.keys.length + 2,
+            itemBuilder: (c, i) {
+              if (i == configState.keys.length + 1) {
+                return ListTile(
+                  title: TextButton(
+                    child: const Text("RESET"),
+                    onPressed: configCubit.resetConfig,
+                  ),
+                );
+              } else if (i == configState.keys.length) {
+                return TextButton(
+                  onPressed: addNewStation,
+                  child: const Text("Add Station"),
+                );
+              } else {
+                return ListTile(
+                  title: Text(configState.keys[i]),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      showDeleteDialog(
+                          configState.keys[i],
+                          configState.keys
+                              .firstWhere((e) => e != configState.keys[i]),
+                          configState.config[configState.keys
+                              .firstWhere((e) => e != configState.keys[i])]);
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    BlocProvider.of<DepartureBoardCubit>(context).updateArgs(
+                        newConfig: configState.config[configState.keys[i]]);
+                    configCubit.updateCurrentStation(configState.keys[i]);
+                  },
+                );
+              }
+            },
+          ),
+        );
+      },
     );
   }
 }

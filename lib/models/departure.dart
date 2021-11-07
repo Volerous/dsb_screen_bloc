@@ -1,44 +1,49 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:intl/intl.dart';
+import './journey_ref.dart';
 part 'departure.g.dart';
 
 @JsonSerializable()
-class DepartureBoard {
-  @JsonKey(name: "Departure")
-  List<Departure> departures = [];
-  late String? error;
-
-  DepartureBoard();
-  factory DepartureBoard.fromJson(Map<String, dynamic> json) =>
-      _$DepartureBoardFromJson(json);
-  Map<String, dynamic> toJson() => _$DepartureBoardToJson(this);
-
-  bool get isEmpty {
-    return departures.isEmpty;
-  }
-}
-
-@JsonSerializable()
-class Departure {
+class Departure extends Equatable {
   @JsonKey(name: "JourneyDetailRef")
-  late JourneyDetailRef journeyDetailRef;
-  late String name;
-  late DepartureType type;
-  late String stop;
-  late String time;
-  late String date;
-  late String id;
-  String? line;
-  String? track;
-  String? rtTrack;
-  late String direction;
-  String? messages;
-  String? finalStop;
-  String? state;
+  final JourneyDetailRef? journeyDetailRef;
+  final String? name;
+  final DepartureType? type;
+  final String? stop;
+  final String? time;
+  final String? date;
+  final String? id;
+  final String? line;
+  final String? track;
+  final String? rtTrack;
+  final String? direction;
+  final String? messages;
+  final String? finalStop;
+  final String? state;
 
-  Departure();
+  @override
+  List<Object?> get props => [name, type, time, date, id, direction];
+
+  const Departure(
+      {this.journeyDetailRef,
+      this.type,
+      this.id,
+      this.name,
+      this.stop,
+      this.time,
+      this.date,
+      this.direction,
+      this.line,
+      this.track,
+      this.rtTrack,
+      this.messages,
+      this.finalStop,
+      this.state});
+
   factory Departure.fromJson(Map<String, dynamic> json) =>
       _$DepartureFromJson(json);
+
   Map<String, dynamic> toJson() => _$DepartureToJson(this);
 
   int get minutesToDeparture {
@@ -54,6 +59,7 @@ class Departure {
 
 class CustomDateConverter implements JsonConverter<DateTime, String> {
   const CustomDateConverter();
+
   @override
   DateTime fromJson(String json) {
     return DateTime.parse(json.replaceAll(RegExp(r'.'), "-"));
@@ -61,15 +67,6 @@ class CustomDateConverter implements JsonConverter<DateTime, String> {
 
   @override
   String toJson(DateTime json) => json.toIso8601String();
-}
-
-@JsonSerializable()
-class JourneyDetailRef {
-  late String ref;
-  JourneyDetailRef();
-  factory JourneyDetailRef.fromJson(Map<String, dynamic> json) =>
-      _$JourneyDetailRefFromJson(json);
-  Map<String, dynamic> toJson() => _$JourneyDetailRefToJson(this);
 }
 
 enum DepartureType {
