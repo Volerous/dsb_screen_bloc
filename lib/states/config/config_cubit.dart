@@ -8,7 +8,7 @@ class ConfigCubit extends HydratedCubit<ConfigState> {
   ConfigCubit(
     this._configLoader,
   ) : super(const ConfigState());
-  final ConfigLoader _configLoader;
+  final ConfigService _configLoader;
 
   Future<void> fetchConfig() async {
     emit(state.copyWith(status: ConfigStatus.loading));

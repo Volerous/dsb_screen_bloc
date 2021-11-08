@@ -23,7 +23,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  final ConfigLoader _configLoader = ConfigLoader();
+  final ConfigService _configLoader = ConfigService();
   final StationsListService _stationsListService = StationsListService();
   @override
   Widget build(BuildContext context) {

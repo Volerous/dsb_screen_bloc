@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'typedefs.dart';
 
-class ConfigLoader {
-  ConfigLoader();
+class ConfigService {
+  ConfigService();
 
   Future<StationConfigs> getOrCreateConfig() async {
     final prefs = await SharedPreferences.getInstance();
