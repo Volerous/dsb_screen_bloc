@@ -1,17 +1,14 @@
 import 'dart:async';
 
 import 'package:dsb_screen_bloc/services/rest.dart';
-import 'package:dsb_screen_bloc/states/config/config_cubit.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import './departure_board_state.dart';
 
 class DepartureBoardCubit extends HydratedCubit<DepartureBoardState> {
   DepartureBoardCubit(this._restApi, Map<String, dynamic> args)
       : _args = args,
-        // _configCubit = configCubit,
         super(DepartureBoardState());
   final DSBRestApi _restApi;
-  // final ConfigCubit _configCubit;
   Map<String, dynamic> _args;
   late Timer _timer;
   Future<void> fetchDepartureBoard() async {

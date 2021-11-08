@@ -2,7 +2,7 @@ import 'package:dsb_screen_bloc/departure_board_bloc_observer.dart';
 import 'package:dsb_screen_bloc/services/config.dart';
 import 'package:dsb_screen_bloc/services/stations.dart';
 import 'package:dsb_screen_bloc/states/config/config_cubit.dart';
-import 'package:dsb_screen_bloc/states/station_list/station_list_cubit.dart';
+import 'package:dsb_screen_bloc/states/station_list/station_list_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dsb_screen_bloc/pages/pages.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => ConfigCubit(_configLoader),
         ),
-        BlocProvider(create: (_) => StationListCubit(_stationsListService))
+        BlocProvider(create: (_) => StationListBloc(_stationsListService))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

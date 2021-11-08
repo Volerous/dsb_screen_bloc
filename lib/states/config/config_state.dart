@@ -1,33 +1,24 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-part 'config_state.g.dart';
+part of 'config_bloc.dart';
 
-enum ConfigStatus { initial, loading, success, failure }
+abstract class ConfigState extends Equatable {
+  const ConfigState();
 
-extension ConfigStatusX on ConfigStatus {
-  bool get isInital => this == ConfigStatus.initial;
-  bool get isLoading => this == ConfigStatus.loading;
-  bool get isSuccess => this == ConfigStatus.success;
-  bool get isFailure => this == ConfigStatus.failure;
+  @override
+  List<Object> get props => [];
 }
 
-@JsonSerializable()
-class ConfigState extends Equatable {
-  const ConfigState({
-    this.status = ConfigStatus.initial,
-    Map<String, dynamic>? conf,
-    String currStation = "",
-  })  : config = conf ?? const {"": ""},
-        _currentStation = currStation;
+class ConfigInitial extends ConfigState {}
 
-  factory ConfigState.fromJson(Map<String, dynamic> json) =>
-      _$ConfigStateFromJson(json);
+class ConfigLoading extends ConfigState {}
 
-  Map<String, dynamic> toJson() => _$ConfigStateToJson(this);
+class ConfigFailed extends ConfigState {}
 
-  final ConfigStatus status;
+class ConfigLoaded extends ConfigState {
   final Map<String, dynamic> config;
   final String _currentStation;
+
+  const ConfigLoaded(this.config, String currentStation)
+      : _currentStation = currentStation;
 
   String get currentStation {
     if (_currentStation == "") {
@@ -53,16 +44,5 @@ class ConfigState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, config, currentStation];
-
-  ConfigState copyWith(
-      {ConfigStatus? status,
-      Map<String, dynamic>? config,
-      String? currentStation}) {
-    return ConfigState(
-      conf: config ?? this.config,
-      status: status ?? this.status,
-      currStation: currentStation ?? this.currentStation,
-    );
-  }
+  List<Object> get props => [config, currentStation];
 }
