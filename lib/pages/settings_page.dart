@@ -1,6 +1,5 @@
 import 'package:dsb_screen_bloc/services/stations.dart';
-import 'package:dsb_screen_bloc/states/config/config_cubit.dart';
-import 'package:dsb_screen_bloc/states/config/config_state.dart';
+import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
 import 'package:dsb_screen_bloc/states/departure_board/departure_board_cubit.dart';
 import 'package:dsb_screen_bloc/states/station_list/station_list_bloc.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,7 @@ class SettingsPage extends StatefulWidget {
 
   static Route route(
     StationListBloc stationListCubit,
-    ConfigCubit configCubit,
+    ConfigBloc configCubit,
     DepartureBoardCubit departureBoardCubit,
     bool isNewStation,
   ) {
@@ -54,7 +53,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConfigCubit, ConfigState>(
+    return BlocBuilder<ConfigBloc, ConfigState>(
       builder: (context, state) {
         config = state.currentConfig;
         return Form(
@@ -68,7 +67,7 @@ class SettingsPageState extends State<SettingsPage> {
                   IconButton(
                     onPressed: () {
                       context
-                          .read<ConfigCubit>()
+                          .read<ConfigBloc>()
                           .updateStationConfig(state.currentStation, config);
                       context.read<DepartureBoardCubit>().updateArgs();
                       Navigator.pop(context);
