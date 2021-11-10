@@ -1,7 +1,5 @@
 import 'package:dsb_screen_bloc/pages/settings_page.dart';
-import 'package:dsb_screen_bloc/states/config/config_cubit.dart';
-import 'package:dsb_screen_bloc/states/config/config_state.dart';
-import 'package:dsb_screen_bloc/states/departure_board/departure_board_cubit.dart';
+import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +15,7 @@ class _StationListDrawerState extends State<StationListDrawer> {
   @override
   void initState() {
     super.initState();
+    context.read<ConfigBloc>().add(ConfigLoad());
   }
 
   void addNewStation() {
@@ -45,9 +44,9 @@ class _StationListDrawerState extends State<StationListDrawer> {
               TextButton(
                 child: const Text("YES"),
                 onPressed: () {
-                  final vm = c.read<ConfigCubit>();
-                  vm.updateCurrentStation(newStation);
-                  vm.deleteStation(station);
+                  final vm = c.read<ConfigBloc>();
+                  vm.add(ConfigChangeCurrentStation(newStation));
+                  vm.add(ConfigDeleteStation(station));
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
@@ -65,51 +64,59 @@ class _StationListDrawerState extends State<StationListDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConfigCubit, ConfigState>(
+    return BlocBuilder<ConfigBloc, ConfigState>(
       builder: (ctx, state) {
-        final configState = state;
-        final configCubit = ctx.watch<ConfigCubit>();
-        return Drawer(
-          child: ListView.builder(
-            itemCount: configState.keys.length + 2,
-            itemBuilder: (c, i) {
-              if (i == configState.keys.length + 1) {
-                return ListTile(
-                  title: TextButton(
-                    child: const Text("RESET"),
-                    onPressed: configCubit.resetConfig,
-                  ),
-                );
-              } else if (i == configState.keys.length) {
-                return TextButton(
-                  onPressed: addNewStation,
-                  child: const Text("Add Station"),
-                );
-              } else {
-                return ListTile(
-                  title: Text(configState.keys[i]),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      showDeleteDialog(
-                          configState.keys[i],
-                          configState.keys
-                              .firstWhere((e) => e != configState.keys[i]),
-                          configState.config[configState.keys
-                              .firstWhere((e) => e != configState.keys[i])]);
+        if (state is ConfigSuccess) {
+          final configBloc = ctx.watch<ConfigBloc>();
+          return Drawer(
+            child: ListView.builder(
+              itemCount: state.keys.length + 2,
+              itemBuilder: (c, i) {
+                if (i == state.keys.length + 1) {
+                  return ListTile(
+                    title: TextButton(
+                      child: const Text("RESET"),
+                      onPressed: () {
+                        configBloc.add(ConfigReset());
+                      },
+                    ),
+                  );
+                } else if (i == state.keys.length) {
+                  return TextButton(
+                    onPressed: addNewStation,
+                    child: const Text("Add Station"),
+                  );
+                } else {
+                  return ListTile(
+                    title: Text(state.keys[i]),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        showDeleteDialog(
+                            state.keys[i],
+                            state.keys.firstWhere((e) => e != state.keys[i]),
+                            state.config[state.keys
+                                .firstWhere((e) => e != state.keys[i])]);
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      configBloc.add(ConfigChangeCurrentStation(state.keys[i]));
                     },
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    BlocProvider.of<DepartureBoardCubit>(context).updateArgs(
-                        newConfig: configState.config[configState.keys[i]]);
-                    configCubit.updateCurrentStation(configState.keys[i]);
-                  },
-                );
-              }
-            },
-          ),
-        );
+                  );
+                }
+              },
+            ),
+          );
+        } else if (state is ConfigLoading || state is ConfigInitial) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return const Center(
+            child: Text("Error"),
+          );
+        }
       },
     );
   }

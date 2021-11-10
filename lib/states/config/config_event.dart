@@ -9,27 +9,30 @@ abstract class ConfigEvent extends Equatable {
 
 class ConfigLoad extends ConfigEvent {}
 
-class ConfigUpdateConfig extends ConfigEvent {
+class UpdateStationConfig extends ConfigEvent {
   final Map<String, dynamic> config;
-  const ConfigUpdateConfig(this.config);
+  final String stationName;
+  const UpdateStationConfig(this.config, this.stationName);
   @override
-  List<Object> get props => [config];
+  List<Object> get props => [config, stationName];
 }
 
 class ConfigChangeCurrentStation extends ConfigEvent {
-  final String station;
+  final String stationName;
 
-  const ConfigChangeCurrentStation({required this.station});
+  const ConfigChangeCurrentStation(this.stationName);
 
   @override
-  List<Object> get props => [station];
+  List<Object> get props => [stationName];
 }
 
 class ConfigDeleteStation extends ConfigEvent {
-  final String station;
+  final String stationName;
 
-  const ConfigDeleteStation({required this.station});
+  const ConfigDeleteStation(this.stationName);
 
   @override
-  List<Object> get props => [station];
+  List<Object> get props => [stationName];
 }
+
+class ConfigReset extends ConfigEvent {}

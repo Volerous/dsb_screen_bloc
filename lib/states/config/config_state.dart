@@ -13,11 +13,11 @@ class ConfigLoading extends ConfigState {}
 
 class ConfigFailed extends ConfigState {}
 
-class ConfigLoaded extends ConfigState {
+class ConfigSuccess extends ConfigState {
   final Map<String, dynamic> config;
   final String _currentStation;
 
-  const ConfigLoaded(this.config, String currentStation)
+  const ConfigSuccess(this.config, String currentStation)
       : _currentStation = currentStation;
 
   String get currentStation {

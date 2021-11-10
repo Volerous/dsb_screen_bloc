@@ -1,7 +1,7 @@
 import 'package:dsb_screen_bloc/departure_board_bloc_observer.dart';
 import 'package:dsb_screen_bloc/services/config.dart';
 import 'package:dsb_screen_bloc/services/stations.dart';
-import 'package:dsb_screen_bloc/states/config/config_cubit.dart';
+import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
 import 'package:dsb_screen_bloc/states/station_list/station_list_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +23,14 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  final ConfigService _configLoader = ConfigService();
+  final ConfigService _configService = ConfigService();
   final StationsListService _stationsListService = StationsListService();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => ConfigCubit(_configLoader),
+          create: (_) => ConfigBloc(_configService),
         ),
         BlocProvider(create: (_) => StationListBloc(_stationsListService))
       ],
