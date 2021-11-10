@@ -1,4 +1,5 @@
 import 'package:dsb_screen_bloc/services/config.dart';
+import 'package:dsb_screen_bloc/services/rest.dart';
 import 'package:dsb_screen_bloc/services/stations.dart';
 import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
 import 'package:dsb_screen_bloc/states/station_list/station_list_bloc.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   final ConfigService _configService = ConfigService();
   final StationsListService _stationsListService = StationsListService();
+  final DSBRestApi _dsbRestApi = const DSBRestApi();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
