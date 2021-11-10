@@ -67,7 +67,7 @@ class _StationListDrawerState extends State<StationListDrawer> {
     return BlocBuilder<ConfigBloc, ConfigState>(
       builder: (ctx, state) {
         if (state is ConfigSuccess) {
-          final configBloc = ctx.watch<ConfigBloc>();
+          final configBloc = ctx.read<ConfigBloc>();
           return Drawer(
             child: ListView.builder(
               itemCount: state.keys.length + 2,

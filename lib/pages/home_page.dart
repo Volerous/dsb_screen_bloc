@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             drawer: const StationListDrawer(),
-            body: const DSBScreenListView(),
+            body: DSBScreenListView(initConfig: state.currentConfig),
           ),
         );
       } else if (state is ConfigLoading || state is ConfigInitial) {

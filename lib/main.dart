@@ -1,4 +1,3 @@
-import 'package:dsb_screen_bloc/departure_board_bloc_observer.dart';
 import 'package:dsb_screen_bloc/services/config.dart';
 import 'package:dsb_screen_bloc/services/stations.dart';
 import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
@@ -12,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = DepartureBoardBlocObserver();
+  Bloc.observer = BlocObserver();
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory

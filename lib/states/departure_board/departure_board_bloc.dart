@@ -18,33 +18,36 @@ class DepartureBoardBloc
         _configBloc = configBloc,
         super(DepartureBoardInitial()) {
     on<DepartureBoardLoad>(_onLoad);
-    _configBloc.stream.listen((state) {
-      if (state is ConfigSuccess) {
-        add(DepartureBoardLoad(state.currentConfig));
+    _configStreamSubscription = _configBloc.stream.listen((configState) {
+      print("db: $configState");
+      if (configState is ConfigSuccess) {
+        add(DepartureBoardLoad(configState.currentConfig));
       }
     });
     _startStream();
   }
   final DSBRestApi _dsbRestApi;
   final ConfigBloc _configBloc;
+  late StreamSubscription _configStreamSubscription;
   late Timer _timer;
-  late Map<String, dynamic> _args;
+  Map<String, dynamic>? _args;
   void _onLoad(
     DepartureBoardLoad event,
     Emitter<DepartureBoardState> emit,
   ) async {
-    _args = event.query;
     final departureBoard = await _dsbRestApi.getDepartureBoard(event.query);
+    _args = event.query;
+    print("db: $_args");
     emit(DepartureBoardSuccess(departureBoard));
   }
 
   void _startStream() {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      add(DepartureBoardLoad(_args));
+      if (_args != null) add(DepartureBoardLoad(_args!));
     });
   }
 
   void retry() {
-    add(DepartureBoardLoad(_args));
+    add(DepartureBoardLoad(_args ?? {}));
   }
 }

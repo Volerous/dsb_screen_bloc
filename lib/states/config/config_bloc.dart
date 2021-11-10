@@ -15,6 +15,7 @@ class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
     on<ConfigChangeCurrentStation>(_onUpdateCurrentStation);
     on<ConfigDeleteStation>(_onDeleteStation);
     on<ConfigReset>(_onConfigReset);
+    add(ConfigLoad());
   }
 
   final ConfigService _configService;
@@ -24,7 +25,6 @@ class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
     if (state is ConfigSuccess) {
       currentStation = (state as ConfigSuccess).currentStation;
     }
-    emit(ConfigLoading());
     final config = await _configService.getOrCreateConfig();
     emit(ConfigSuccess(config, currentStation));
   }
