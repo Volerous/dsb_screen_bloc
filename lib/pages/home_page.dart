@@ -37,24 +37,20 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext c) {
     return BlocBuilder<ConfigBloc, ConfigState>(builder: (context, state) {
       if (state is ConfigSuccess) {
-        return BlocProvider<DepartureBoardBloc>(
-          create: (_) =>
-              DepartureBoardBloc(_restApi, context.watch<ConfigBloc>()),
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text(state.currentStation),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    goToSettingsPage(context.read<DepartureBoardBloc>());
-                  },
-                ),
-              ],
-            ),
-            drawer: const StationListDrawer(),
-            body: DSBScreenListView(initConfig: state.currentConfig),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(state.currentStation),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  goToSettingsPage(context.read<DepartureBoardBloc>());
+                },
+              ),
+            ],
           ),
+          drawer: const StationListDrawer(),
+          body: DSBScreenListView(initConfig: state.currentConfig),
         );
       } else if (state is ConfigLoading || state is ConfigInitial) {
         return const CircularProgressIndicator();

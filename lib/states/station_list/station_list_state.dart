@@ -12,7 +12,7 @@ class StationListInitial extends StationListState {}
 class StationListLoading extends StationListState {}
 
 class StationListSuccess extends StationListState {
-  final Map<String, String> stationMap;
+  final Map<String, dynamic> stationMap;
   const StationListSuccess(this.stationMap);
   List<String> get stationNames => stationMap.keys.toList();
   @override

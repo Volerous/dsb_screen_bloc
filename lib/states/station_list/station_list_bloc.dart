@@ -14,11 +14,32 @@ class StationListBloc extends HydratedBloc<StationListEvent, StationListState> {
   final StationsListService _stationsListService;
 
   @override
-  StationListState? fromJson(Map<String, dynamic> json) =>
-      StationListSuccess(json["value"] as Map<String, String>);
+  StationListState? fromJson(Map<String, dynamic> json) {
+    print(json);
+    switch (json['type'] as String) {
+      case "StationListSuccess":
+        return StationListSuccess(
+          json['value'] as Map<String, dynamic>,
+        );
+      case "StationListFailed":
+        return StationListFailed();
+      case "StationListLoading":
+        return StationListLoading();
+      case "StationListInitial":
+        return StationListInitial();
+      default:
+        throw Exception("the state is not found: ${json['type']}");
+    }
+  }
 
   @override
-  Map<String, dynamic> toJson(StationListState state) => {"value": state};
+  Map<String, dynamic> toJson(StationListState state) {
+    var base = {"type": state.runtimeType.toString()};
+    if (state is StationListSuccess) {
+      return {"value": state.stationMap, ...base};
+    }
+    return base;
+  }
 
   void _onLoad(StationListLoad event, Emitter<StationListState> emit) async {
     final stations = await _stationsListService.getStationsMap();
