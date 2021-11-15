@@ -64,7 +64,6 @@ class DepartureBoardBloc
     try {
       final departureBoard = await _dsbRestApi.getDepartureBoard(event.query);
       _args = event.query;
-      print("db: $_args");
       emit(DepartureBoardSuccess(departureBoard));
     } catch (e) {
       print(e);

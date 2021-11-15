@@ -1,4 +1,3 @@
-import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
 import 'package:dsb_screen_bloc/states/departure_board/departure_board_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:dsb_screen_bloc/widgets/listtiles.dart';

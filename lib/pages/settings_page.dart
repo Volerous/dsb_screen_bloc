@@ -59,7 +59,6 @@ class SettingsPageState extends State<SettingsPage> {
     return BlocBuilder<ConfigBloc, ConfigState>(
       builder: (context, state) {
         if (state is ConfigSuccess) {
-          print(state.currentConfig);
           if (!widget.isNewStation) config = state.currentConfig;
           return Form(
             key: _formKey,
@@ -67,7 +66,9 @@ class SettingsPageState extends State<SettingsPage> {
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: AppBar(
-                  title: Text(state.currentStation),
+                  title: Text(widget.isNewStation
+                      ? "New Station"
+                      : state.currentStation),
                   actions: [
                     IconButton(
                       onPressed: () {

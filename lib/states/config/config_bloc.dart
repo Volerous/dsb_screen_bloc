@@ -62,7 +62,6 @@ class ConfigBloc extends HydratedBloc<ConfigEvent, ConfigState> {
     var config = (state as ConfigSuccess).config;
     config[event.stationName] = event.config;
     await _configService.updateStation(event.stationName, event.config);
-    print(event);
     emit(ConfigSuccess(config, (state as ConfigSuccess).currentStation));
   }
 
