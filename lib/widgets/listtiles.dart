@@ -39,14 +39,23 @@ class _ListElementState extends State<ListElement> {
           ),
         ),
       ),
-      trailing: Text(
-        "${widget.departure.minutesToDeparture}",
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Colors.black,
-        ),
-      ),
+      trailing: !widget.departure.isCancelled
+          ? Text(
+              "${widget.departure.minutesToDeparture}",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            )
+          : const Text(
+              "Cancelled",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.red,
+              ),
+            ),
     );
   }
 }

@@ -21,7 +21,7 @@ class ConfigSuccess extends ConfigState {
       : _currentStation = currentStation;
 
   String get currentStation {
-    if (_currentStation == "") {
+    if (_currentStation == "" || !config.containsKey(_currentStation)) {
       return stationNames.first;
     }
     return _currentStation;

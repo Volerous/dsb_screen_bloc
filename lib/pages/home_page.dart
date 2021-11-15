@@ -23,7 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final DSBRestApi _restApi = const DSBRestApi();
-  void goToSettingsPage(DepartureBoardBloc departureBoardBloc) {
+  void goToSettingsPage() {
     Navigator.of(context).push<void>(
       SettingsPage.route(
         context.read<StationListBloc>(),
@@ -43,9 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings),
-                onPressed: () {
-                  goToSettingsPage(context.read<DepartureBoardBloc>());
-                },
+                onPressed: goToSettingsPage,
               ),
             ],
           ),

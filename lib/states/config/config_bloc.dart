@@ -6,7 +6,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 part 'config_event.dart';
 part 'config_state.dart';
 
-class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
+class ConfigBloc extends HydratedBloc<ConfigEvent, ConfigState> {
   ConfigBloc(ConfigService configService)
       : _configService = configService,
         super(ConfigInitial()) {
@@ -16,6 +16,34 @@ class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
     on<ConfigDeleteStation>(_onDeleteStation);
     on<ConfigReset>(_onConfigReset);
     add(ConfigLoad());
+  }
+  @override
+  ConfigState? fromJson(Map<String, dynamic> json) {
+    switch (json['type'] as String) {
+      case "ConfigInitial":
+        return ConfigInitial();
+      case "ConfigFailed":
+        return ConfigFailed();
+      case "ConfigLoading":
+        return ConfigLoading();
+      case "ConfigSuccess":
+        return ConfigSuccess(json["config"], json["currentStation"]);
+      default:
+        throw Exception("Cannot find value");
+    }
+  }
+
+  @override
+  Map<String, dynamic> toJson(ConfigState state) {
+    var base = {'type': state.runtimeType.toString()};
+    if (state is ConfigSuccess) {
+      return {
+        "config": state.config,
+        "currentStation": state.currentStation,
+        ...base
+      };
+    }
+    return base;
   }
 
   final ConfigService _configService;
@@ -34,6 +62,7 @@ class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
     var config = (state as ConfigSuccess).config;
     config[event.stationName] = event.config;
     await _configService.updateStation(event.stationName, event.config);
+    print(event);
     emit(ConfigSuccess(config, (state as ConfigSuccess).currentStation));
   }
 

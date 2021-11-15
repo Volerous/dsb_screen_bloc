@@ -55,6 +55,10 @@ class Departure extends Equatable {
     if (type == DepartureType.reg) return "RE";
     return line ?? "";
   }
+
+  bool get isCancelled {
+    return state?.toLowerCase() == "cancellation";
+  }
 }
 
 class CustomDateConverter implements JsonConverter<DateTime, String> {

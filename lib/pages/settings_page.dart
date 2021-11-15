@@ -38,7 +38,13 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   final _formKey = GlobalKey<FormState>();
-  late Map<String, dynamic> config;
+  Map<String, dynamic> config = {
+    "useBus": 1,
+    "useTog": 1,
+    "useMetro": 1,
+    "offsetTime": 0,
+    "id": null
+  };
   late String name;
 
   @override
@@ -53,7 +59,8 @@ class SettingsPageState extends State<SettingsPage> {
     return BlocBuilder<ConfigBloc, ConfigState>(
       builder: (context, state) {
         if (state is ConfigSuccess) {
-          config = state.currentConfig;
+          print(state.currentConfig);
+          if (!widget.isNewStation) config = state.currentConfig;
           return Form(
             key: _formKey,
             child: Scaffold(
@@ -64,9 +71,13 @@ class SettingsPageState extends State<SettingsPage> {
                   actions: [
                     IconButton(
                       onPressed: () {
-                        context.read<ConfigBloc>().add(
-                            UpdateStationConfig(config, state.currentStation));
+                        context.read<ConfigBloc>().add(UpdateStationConfig(
+                            config,
+                            widget.isNewStation ? name : state.currentStation));
                         Navigator.pop(context);
+                        if (widget.isNewStation) {
+                          Navigator.pop(context);
+                        }
                       },
                       icon: const Icon(Icons.save),
                     )

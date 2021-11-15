@@ -15,7 +15,6 @@ class StationListBloc extends HydratedBloc<StationListEvent, StationListState> {
 
   @override
   StationListState? fromJson(Map<String, dynamic> json) {
-    print(json);
     switch (json['type'] as String) {
       case "StationListSuccess":
         return StationListSuccess(
