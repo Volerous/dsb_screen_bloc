@@ -72,12 +72,13 @@ class SettingsPageState extends State<SettingsPage> {
                   actions: [
                     IconButton(
                       onPressed: () {
-                        context.read<ConfigBloc>().add(UpdateStationConfig(
-                            config,
+                        var vm = context.read<ConfigBloc>();
+                        vm.add(UpdateStationConfig(config,
                             widget.isNewStation ? name : state.currentStation));
                         Navigator.pop(context);
                         if (widget.isNewStation) {
                           Navigator.pop(context);
+                          vm.add(ConfigChangeCurrentStation(name));
                         }
                       },
                       icon: const Icon(Icons.save),
@@ -89,7 +90,6 @@ class SettingsPageState extends State<SettingsPage> {
                 children: [
                   if (widget.isNewStation)
                     BlocBuilder<StationListBloc, StationListState>(
-                      bloc: StationListBloc(StationsListService()),
                       builder: (context, state) {
                         context.read<StationListBloc>().loadStation();
                         if (state is StationListSuccess) {
