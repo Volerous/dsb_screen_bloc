@@ -1,10 +1,8 @@
-import 'package:dsb_screen_bloc/services/stations.dart';
 import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
 import 'package:dsb_screen_bloc/states/station_list/station_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage(

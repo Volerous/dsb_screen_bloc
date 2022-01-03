@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dsb_screen_bloc/services/config.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';

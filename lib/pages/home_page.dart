@@ -1,4 +1,3 @@
-import 'package:dsb_screen_bloc/services/rest.dart';
 import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
 import 'package:dsb_screen_bloc/states/station_list/station_list_bloc.dart';
 import 'package:dsb_screen_bloc/widgets/drawer.dart';

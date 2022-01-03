@@ -1,6 +1,7 @@
+// ignore_for_file: unused_field
+
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:dsb_screen_bloc/models/departure_board.dart';
 import 'package:dsb_screen_bloc/services/rest.dart';
 import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
@@ -20,7 +21,6 @@ class DepartureBoardBloc
         super(DepartureBoardInitial()) {
     on<DepartureBoardLoad>(_onLoad);
     _configStreamSubscription = _configBloc.stream.listen((configState) {
-      print("db: $configState");
       if (configState is ConfigSuccess) {
         add(DepartureBoardLoad(configState.currentConfig));
       }
@@ -65,7 +65,6 @@ class DepartureBoardBloc
       _args = event.query;
       emit(DepartureBoardSuccess(departureBoard));
     } catch (e) {
-      print(e);
       emit(DepartureBoardFailed());
     }
   }
