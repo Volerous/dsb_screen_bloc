@@ -51,13 +51,13 @@ class DSBColors {
     }
     if (type == DepartureType.m) {
       switch (line) {
-        case "1":
+        case "M1":
           return m1Green;
-        case "2":
+        case "M2":
           return m2Yellow;
-        case "3":
+        case "M3":
           return m3Red;
-        case "4":
+        case "M4":
           return m4Blue;
       }
     }
