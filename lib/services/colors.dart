@@ -14,8 +14,10 @@ class DSBColors {
   static const Color aBusRed = Color.fromARGB(255, 184, 33, 28);
   static const Color cBusBlue = Color.fromARGB(255, 0, 165, 204);
   static const Color sBusBlue = Color.fromARGB(255, 0, 101, 170);
-  static const Color m3m4Red = Color.fromARGB(255, 255, 10, 10);
-  static const Color m1m2Green = Color.fromARGB(255, 80, 183, 72);
+  static const Color m3Red = Color.fromARGB(255, 255, 10, 10);
+  static const Color m4Blue = Color.fromARGB(255, 255, 10, 10);
+  static const Color m2Yellow = Color.fromARGB(255, 255, 10, 10);
+  static const Color m1Green = Color.fromARGB(255, 80, 183, 72);
 
   static Color getFromInfo(DepartureType type, String? line) {
     if (type == DepartureType.reg) return regGreen;
@@ -44,6 +46,18 @@ class DSBColors {
           return eTrainPurple;
         case "F":
           return fTrainYellow;
+      }
+    }
+    if (type == DepartureType.m) {
+      switch (line) {
+        case "3":
+          return m3Red;
+        case "4":
+          return m4Blue;
+        case "1":
+          return m2Yellow;
+        case "2":
+          return m1Green;
       }
     }
     return icRed;

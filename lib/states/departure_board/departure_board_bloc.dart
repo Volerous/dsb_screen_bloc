@@ -35,7 +35,6 @@ class DepartureBoardBloc
       case "DepartureBoardFailed":
         return DepartureBoardFailed();
       case "DepartureBoardLoading":
-        return DepartureBoardLoading();
       case "DepartureBoardSuccess":
         return DepartureBoardSuccess(DepartureBoard.fromJson(json['board']));
       default:
