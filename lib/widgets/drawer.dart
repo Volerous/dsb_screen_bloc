@@ -68,21 +68,11 @@ class _StationListDrawerState extends State<StationListDrawer> {
       builder: (ctx, state) {
         if (state is ConfigSuccess) {
           final configBloc = ctx.read<ConfigBloc>();
-          print(state.config);
           return Drawer(
             child: ListView.builder(
-              itemCount: state.keys.length + 2,
+              itemCount: state.keys.length + 1,
               itemBuilder: (c, i) {
-                if (i == state.keys.length + 1) {
-                  return ListTile(
-                    title: TextButton(
-                      child: const Text("RESET"),
-                      onPressed: () {
-                        configBloc.add(ConfigReset());
-                      },
-                    ),
-                  );
-                } else if (i == state.keys.length) {
+                if (i == state.keys.length) {
                   return TextButton(
                     onPressed: addNewStation,
                     child: const Text("Add Station"),

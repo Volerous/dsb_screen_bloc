@@ -59,7 +59,6 @@ class SettingsPageState extends State<SettingsPage> {
     return BlocBuilder<ConfigBloc, ConfigState>(
       builder: (context, state) {
         if (state is ConfigSuccess) {
-          print(state.currentConfig);
           if (!widget.isNewStation) config = state.currentConfig;
           return Form(
             key: _formKey,
@@ -67,16 +66,19 @@ class SettingsPageState extends State<SettingsPage> {
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: AppBar(
-                  title: Text(state.currentStation),
+                  title: Text(widget.isNewStation
+                      ? "New Station"
+                      : state.currentStation),
                   actions: [
                     IconButton(
                       onPressed: () {
-                        context.read<ConfigBloc>().add(UpdateStationConfig(
-                            config,
+                        var vm = context.read<ConfigBloc>();
+                        vm.add(UpdateStationConfig(config,
                             widget.isNewStation ? name : state.currentStation));
                         Navigator.pop(context);
                         if (widget.isNewStation) {
                           Navigator.pop(context);
+                          vm.add(ConfigChangeCurrentStation(name));
                         }
                       },
                       icon: const Icon(Icons.save),
@@ -88,7 +90,6 @@ class SettingsPageState extends State<SettingsPage> {
                 children: [
                   if (widget.isNewStation)
                     BlocBuilder<StationListBloc, StationListState>(
-                      bloc: StationListBloc(StationsListService()),
                       builder: (context, state) {
                         context.read<StationListBloc>().loadStation();
                         if (state is StationListSuccess) {

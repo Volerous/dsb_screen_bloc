@@ -1,6 +1,5 @@
 import 'package:dsb_screen_bloc/services/rest.dart';
 import 'package:dsb_screen_bloc/states/config/config_bloc.dart';
-import 'package:dsb_screen_bloc/states/departure_board/departure_board_bloc.dart';
 import 'package:dsb_screen_bloc/states/station_list/station_list_bloc.dart';
 import 'package:dsb_screen_bloc/widgets/drawer.dart';
 import 'package:dsb_screen_bloc/widgets/listview.dart';
@@ -22,7 +21,6 @@ class _MyHomePageState extends State<MyHomePage> {
     context.read<ConfigBloc>().add(ConfigLoad());
   }
 
-  final DSBRestApi _restApi = const DSBRestApi();
   void goToSettingsPage() {
     Navigator.of(context).push<void>(
       SettingsPage.route(
